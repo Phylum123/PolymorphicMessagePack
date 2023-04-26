@@ -105,3 +105,8 @@ _You can see more in [PolyMsgPack.Test](https://github.com/PatchouliTC/Polymorph
       
       **it can Fixed target type match id and won't change id in diff version**
   2. Fody plugin also will Check each fixed id,If the same Id is pointed to a different type, **it will prevent compilation and indicate the specific conflict type**
+  
+  3. If you want to use _Fody.Test_ to see _PolymorphicMessagePack.Fody_ works,make sure change `MsgPackDefineForInject` project property:
+```xml
+    <DisableFody>true</DisableFody>
+```
