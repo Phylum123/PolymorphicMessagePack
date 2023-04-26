@@ -86,10 +86,10 @@ Then set your `Project1` follow these steps:
     }
     
     //also work for generic type,but you must make sure type in [RequireUnionGeneric] is current generic type or fody will give complie error
-    [RequireUnionGeneric(10,typeof(Class2<int>))]
+    [RequireUnionGeneric(10,typeof(Class4<int>))]
     [GenericUnion(typeof(string))]
     [MessagePackObject]
-    public class Class2<T> : IBase4<T>
+    public class Class4<T> : IBase4<T>
     {
         [Key(0)]
         public long CT2 { get; set; }
