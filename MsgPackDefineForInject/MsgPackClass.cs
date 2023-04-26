@@ -61,8 +61,8 @@ namespace MsgPackDefineForInject
     }
 
 
-    [RequireUnionGeneric(1,typeof(int))]
-    [RequireUnionGeneric(2,typeof(string))]
+    [RequireUnionGeneric(1,typeof(Class8<int>))]
+    [RequireUnionGeneric(2,typeof(Class8<string>))]
     [MessagePackObject]
     public class Class8<T> : CBase6<T>
     {

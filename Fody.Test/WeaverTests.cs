@@ -18,8 +18,8 @@ namespace Fody.Test
 
         static WeaverTests()
         {
-            var xElement = XElement.Parse("<PolymorphicMessagePack.Fody NameSpace='MsgPackDefineForInject'/>");
-            var weavingTask = new ModuleWeaver { Config= xElement };
+            var xElement = XElement.Parse("<MsgPackPolyWeaver NameSpace='MsgPackDefineForInject'/>");
+            var weavingTask = new MsgPackPolyWeaver { Config= xElement };
             testResult = weavingTask.ExecuteTestRun("MsgPackDefineForInject.dll",runPeVerify:false);
         }
 

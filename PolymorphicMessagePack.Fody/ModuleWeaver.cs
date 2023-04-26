@@ -135,6 +135,15 @@ namespace PolymorphicMessagePack.Fody
                             var manualSetId = (uint)targetAttr.ConstructorArguments[0].Value;
                             var typeName = targetAttr.ConstructorArguments[1].Value.ToString();
 
+                            var setType = (TypeReference)targetAttr.ConstructorArguments[1].Value;
+                            var setTypeDef = setType.Resolve();
+
+                            if (!setType.IsGenericInstance || setTypeDef.FullName!=classtyperef.FullName)
+                            {
+                                WriteError($"{classtyperef.FullName} fixed id manaully,but target union type not {classtyperef.FullName} generic type (is {setTypeDef.FullName})");
+                                return;
+                            }
+
                             if (manualMarkUsedIdForNonGenericTypes.TryGetValue(manualSetId, out var _) 
                                 || manualMarkUsedIdForGenericTypes.TryGetValue(manualSetId, out var _))
                             {
@@ -274,11 +283,6 @@ namespace PolymorphicMessagePack.Fody
             return derivedtypes;
         }
 
-        private bool HasGenericTypeMarkAttribute(TypeDefinition type) =>
-            type.HasCustomAttributes &&
-            type.CustomAttributes.Any(attr => attr.AttributeType.FullName == _genericUnion.FullName) &&
-            type.CustomAttributes.Any(attr => attr.AttributeType.FullName == _msgObj.FullName);
-
         private List<(TypeDefinition, List<CustomAttribute>)> GetGenericDerivedTypes(
             ModuleDefinition module, 
             IEnumerable<TypeDefinition> baseTypes)
@@ -288,7 +292,8 @@ namespace PolymorphicMessagePack.Fody
                 !x.IsAbstract &&
                 x.IsClass &&
                 x.HasGenericParameters &&
-                HasGenericTypeMarkAttribute(x));
+                x.HasCustomAttributes &&
+                x.CustomAttributes.Any(y => y.AttributeType.FullName == _msgObj.FullName));
 
             List<(TypeDefinition, List<CustomAttribute>)> derivedtypes = new List<(TypeDefinition, List<CustomAttribute>)>();
 
@@ -300,35 +305,33 @@ namespace PolymorphicMessagePack.Fody
                     .ToLookup(y => y.ConstructorArguments[0].Value.ToString())
                     .Select(z => z.First()).ToList();
 
-                if (genericUnionTypes.Count > 0)
-                {
-                    //package
-                    var package = (classdef, genericUnionTypes);
+                //package
+                var package = (classdef, genericUnionTypes);
 
-                    var nextcheck = classdef;
-                    bool isInAnyAbs = false;
-                    while (nextcheck != null && nextcheck.FullName != _objectTypeRef.FullName)
+                var nextcheck = classdef;
+                bool isInAnyAbs = false;
+                while (nextcheck != null && nextcheck.FullName != _objectTypeRef.FullName)
+                {
+                    var baseType = baseTypes.Where(x => x.IsAbstract && x.FullName == nextcheck.FullName).FirstOrDefault();
+                    if (baseType != null)
                     {
-                        var baseType = baseTypes.Where(x => x.IsAbstract && x.FullName == nextcheck.FullName).FirstOrDefault();
-                        if (baseType != null)
-                        {
-                            derivedtypes.Add(package);
-                            isInAnyAbs = true;
-                            break;
-                        }
-                        nextcheck = nextcheck.BaseType?.Resolve();
+                        derivedtypes.Add(package);
+                        isInAnyAbs = true;
+                        break;
                     }
-                    if (!isInAnyAbs)
+                    nextcheck = nextcheck.BaseType?.Resolve();
+                }
+                if (!isInAnyAbs)
+                {
+                    //check all interface base type
+                    var relateInterfaces = baseTypes.Where(x => x.IsInterface && classdef.Interfaces.Any(y => (y.InterfaceType.IsGenericInstance && y.InterfaceType.GetElementType().FullName == x.FullName) ||
+                    (!y.InterfaceType.IsGenericInstance && y.InterfaceType.FullName == x.FullName)));
+                    if (relateInterfaces.Count() > 0)
                     {
-                        //check all interface base type
-                        var relateInterfaces = baseTypes.Where(x => x.IsInterface && classdef.Interfaces.Any(y => (y.InterfaceType.IsGenericInstance && y.InterfaceType.GetElementType().FullName == x.FullName) ||
-                        (!y.InterfaceType.IsGenericInstance && y.InterfaceType.FullName == x.FullName)));
-                        if (relateInterfaces.Count() > 0)
-                        {
-                            derivedtypes.Add(package);
-                        }
+                        derivedtypes.Add(package);
                     }
                 }
+
             }
             return derivedtypes;
         }
