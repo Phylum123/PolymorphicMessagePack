@@ -5,14 +5,36 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Fody.Test\**" />
+    <Compile Remove="MsgPackDefineForInject\**" />
+    <Compile Remove="PolymorphicMessagePack.Fody\**" />
+    <Compile Remove="PolymorphicMsgPack.Fody\**" />
     <Compile Remove="PolyMsgPack.Test\**" />
+    <Compile Remove="ShareAttributes\**" />
+    <Compile Remove="SharedAttributes\**" />
+    <EmbeddedResource Remove="Fody.Test\**" />
+    <EmbeddedResource Remove="MsgPackDefineForInject\**" />
+    <EmbeddedResource Remove="PolymorphicMessagePack.Fody\**" />
+    <EmbeddedResource Remove="PolymorphicMsgPack.Fody\**" />
     <EmbeddedResource Remove="PolyMsgPack.Test\**" />
+    <EmbeddedResource Remove="ShareAttributes\**" />
+    <EmbeddedResource Remove="SharedAttributes\**" />
+    <None Remove="Fody.Test\**" />
+    <None Remove="MsgPackDefineForInject\**" />
+    <None Remove="PolymorphicMessagePack.Fody\**" />
+    <None Remove="PolymorphicMsgPack.Fody\**" />
     <None Remove="PolyMsgPack.Test\**" />
+    <None Remove="ShareAttributes\**" />
+    <None Remove="SharedAttributes\**" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MessagePack" Version="2.3.85" />
     <PackageReference Include="MSTest.TestFramework" Version="2.2.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="ShareAttributes\ShareAttributes.csproj" />
   </ItemGroup>
 
 </Project>

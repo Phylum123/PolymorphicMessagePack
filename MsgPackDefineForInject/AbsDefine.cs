@@ -1,6 +1,6 @@
-﻿using PolymorphicMessagePack;
+﻿using ShareAttributes;
 
-namespace PolyMsgPack.Test
+namespace MsgPackDefineForInject
 {
     [UnionAbsOrInterface]
     public abstract class CBase1

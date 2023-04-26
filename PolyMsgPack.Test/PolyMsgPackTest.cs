@@ -1,5 +1,5 @@
 ﻿using MessagePack;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MsgPackDefineForInject;
 using PolymorphicMessagePack;
 
 namespace PolyMsgPack.Test

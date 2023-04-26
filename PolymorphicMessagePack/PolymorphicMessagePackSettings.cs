@@ -1,5 +1,6 @@
 ﻿using MessagePack;
 using MessagePack.Resolvers;
+using ShareAttributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,18 +8,14 @@ using System.Reflection;
 
 namespace PolymorphicMessagePack
 {
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false, Inherited = false)]
-    public class UnionAbsOrInterfaceAttribute : Attribute
-    {
 
-    }
-
-    public static class GetMarkAttributeClassListExtension
+    internal static class GetMarkAttributeClassListExtension
     {
         private static readonly Type _objType = typeof(object);
         public static (Assembly, HashSet<Type>) GetMarkUnionAbsAttributeClasses(this Assembly assembly)
         {
-            return (assembly, assembly.GetTypes().Where(x => (x.IsAbstract || x.IsInterface) && x.GetCustomAttribute<UnionAbsOrInterfaceAttribute>(false) != null).ToHashSet());
+            var markdata = new HashSet<Type>(assembly.GetTypes().Where(x => (x.IsAbstract || x.IsInterface) && x.GetCustomAttribute<UnionAbsOrInterfaceAttribute>(false) != null));
+            return (assembly, markdata);
         }
 
         public static Dictionary<Type, List<Type>> GetAbsDriveClassTypes(this (Assembly assembly, HashSet<Type> types) data)
@@ -28,92 +25,7 @@ namespace PolymorphicMessagePack
                 !x.IsAbstract && !x.IsInterface && x.IsClass && x != _objType && !data.types.Contains(x) && !x.IsGenericType
             );
 
-            Dictionary<Type, List<Type>> cache = new();
-            HashSet<Type> visitedScanInterfaceTypes = new();
-
-            foreach (var type in require_search_types)
-            {
-                Type temp = type;
-                while (temp != null && temp != _objType)
-                {
-                    //if base type is marked abs
-                    //is generic base?
-                    if (temp.BaseType.IsGenericType)
-                    {
-                        var clothType = temp.BaseType.GetGenericTypeDefinition();
-                        if (data.types.Contains(clothType))
-                        {
-                            if (!cache.TryGetValue(clothType, out var list))
-                            {
-                                list = new List<Type>() { type };
-                                cache.Add(clothType, list);
-                            }
-                            else
-                            {
-                                list.Add(type);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (data.types.Contains(temp.BaseType))
-                        {
-                            if (!cache.TryGetValue(temp.BaseType, out var list))
-                            {
-                                list = new List<Type>() { type };
-                                cache.Add(temp.BaseType, list);
-                            }
-                            else
-                            {
-                                list.Add(type);
-                            }
-                        }
-                    }
-                    if (!temp.IsAbstract && !visitedScanInterfaceTypes.Contains(temp))
-                    {
-                        visitedScanInterfaceTypes.Add(temp);
-                        foreach (var @interface in temp.GetInterfaces())
-                        {
-                            //if any interface in marked interface
-                            //is generic base?
-                            if (@interface.IsGenericType)
-                            {
-                                var clothType = @interface.GetGenericTypeDefinition();
-                                if (data.types.Contains(clothType))
-                                {
-                                    if (!cache.TryGetValue(clothType, out var list))
-                                    {
-                                        list = new List<Type>() { type };
-                                        cache.Add(clothType, list);
-                                    }
-                                    else
-                                    {
-                                        list.Add(type);
-                                    }
-                                }
-                            }
-                            else
-                            {
-
-                                if (data.types.Contains(@interface))
-                                {
-                                    if (!cache.TryGetValue(@interface, out var list))
-                                    {
-                                        list = new List<Type>() { type };
-                                        cache.Add(@interface, list);
-                                    }
-                                    else
-                                    {
-                                        list.Add(type);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    temp = temp.BaseType;
-                }
-            }
-            return cache;
+            return AnalysisTypes(require_search_types, data.types);
         }
 
         public static Dictionary<Type, List<Type>> GetAbsDriveGenericClassTypes(this (Assembly assembly, HashSet<Type> types) data)
@@ -123,49 +35,34 @@ namespace PolymorphicMessagePack
                 !x.IsAbstract && !x.IsInterface && x.IsClass && x != _objType && !data.types.Contains(x) && x.IsGenericType
             );
 
-            Dictionary<Type, List<Type>> cache = new();
-            HashSet<Type> visitedScanInterfaceTypes = new();
+            return AnalysisTypes(require_search_types, data.types);
+        }
 
-            foreach (var type in require_search_types)
+        private static Dictionary<Type, List<Type>> AnalysisTypes(IEnumerable<Type> types, HashSet<Type> exceptTypes)
+        {
+            Dictionary<Type, List<Type>> cache = new Dictionary<Type, List<Type>>();
+            HashSet<Type> visitedScanInterfaceTypes = new HashSet<Type>();
+
+            foreach (var type in types)
             {
                 Type temp = type;
                 while (temp != null && temp != _objType)
                 {
+                    var factCheckType = temp.BaseType;
                     //if base type is marked abs
                     //is generic base?
                     if (temp.BaseType.IsGenericType)
+                        factCheckType = temp.BaseType.GetGenericTypeDefinition();
+                    if (exceptTypes.Contains(factCheckType))
                     {
-                        var clothType = temp.BaseType.GetGenericTypeDefinition();
-                        if (data.types.Contains(clothType))
+                        if (!cache.TryGetValue(factCheckType, out var list))
                         {
-                            if (!cache.TryGetValue(temp.BaseType, out var list))
-                            {
-                                list = new List<Type>() { type };
-                                cache.Add(temp.BaseType, list);
-                            }
-                            else
-                            {
-                                list.Add(type);
-                            }
+                            list = new List<Type>() { type };
+                            cache.Add(factCheckType, list);
                         }
+                        else
+                            list.Add(type);
                     }
-                    else
-                    {
-                        if (data.types.Contains(temp.BaseType))
-                        {
-                            if (!cache.TryGetValue(temp.BaseType, out var list))
-                            {
-                                list = new List<Type>() { type };
-                                cache.Add(temp.BaseType, list);
-                            }
-                            else
-                            {
-                                list.Add(type);
-                            }
-                        }
-                    }
-
-
 
                     if (!temp.IsAbstract && !visitedScanInterfaceTypes.Contains(temp))
                     {
@@ -174,36 +71,19 @@ namespace PolymorphicMessagePack
                         {
                             //if any interface in marked interface
                             //is generic base?
+                            factCheckType = @interface;
                             if (@interface.IsGenericType)
+                                factCheckType = @interface.GetGenericTypeDefinition();
+                            if (exceptTypes.Contains(factCheckType))
                             {
-                                var clothType = @interface.GetGenericTypeDefinition();
-                                if (data.types.Contains(clothType))
+                                if (!cache.TryGetValue(factCheckType, out var list))
                                 {
-                                    if (!cache.TryGetValue(@interface, out var list))
-                                    {
-                                        list = new List<Type>() { type };
-                                        cache.Add(@interface, list);
-                                    }
-                                    else
-                                    {
-                                        list.Add(type);
-                                    }
+                                    list = new List<Type>() { type };
+                                    cache.Add(factCheckType, list);
                                 }
-                            }
-                            else
-                            {
-
-                                if (data.types.Contains(@interface))
+                                else
                                 {
-                                    if (!cache.TryGetValue(@interface, out var list))
-                                    {
-                                        list = new List<Type>() { type };
-                                        cache.Add(@interface, list);
-                                    }
-                                    else
-                                    {
-                                        list.Add(type);
-                                    }
+                                    list.Add(type);
                                 }
                             }
                         }
@@ -218,11 +98,11 @@ namespace PolymorphicMessagePack
 
     public class PolymorphicMessagePackSettings
     {
-        internal readonly Dictionary<Type, uint> TypeToId = new();
-        internal readonly Dictionary<uint, Type> IdToType = new();
-        internal readonly HashSet<Type> BaseTypes = new();
-        internal readonly HashSet<Type> GenericTypes = new();
-        internal readonly HashSet<Assembly> Assemblies = new();
+        internal readonly Dictionary<Type, uint> TypeToId = new Dictionary<Type, uint>();
+        internal readonly Dictionary<uint, Type> IdToType = new Dictionary<uint, Type>();
+        internal readonly HashSet<Type> BaseTypes = new HashSet<Type>();
+        internal readonly HashSet<Type> GenericTypes = new HashSet<Type>();
+        internal readonly HashSet<Assembly> Assemblies = new HashSet<Assembly>();
         internal IFormatterResolver InnerResolver;
         internal Type InnerResolverType;
 
@@ -271,8 +151,8 @@ namespace PolymorphicMessagePack
                 throw new ArgumentException($"Failed to register derived type '{typeof(T).FullName}'. Type Id: {typeId} is already registered to another type '{currentType.FullName}'", nameof(typeId));
 
             //Use TryAdd, becasue the type could already exist and the user is simply trying to add another base class
-            TypeToId.TryAdd(typeof(T), typeId);
-            IdToType.TryAdd(typeId, typeof(T));
+            TypeToId.Add(typeof(T), typeId);
+            IdToType.Add(typeId, typeof(T));
             BaseTypes.Add(typeof(B));
         }
 
@@ -281,10 +161,6 @@ namespace PolymorphicMessagePack
             if (Assemblies.Contains(assembly))
                 return;
             Assemblies.Add(assembly);
-            //prepare auto increase key id
-            uint startId = 0;
-            if (IdToType.Count > 0)
-                startId = IdToType.Keys.Max() + 1;
 
             //get all mark require union abs/interface
             var markedUnionRequireAbsOrInterfaces = assembly.GetMarkUnionAbsAttributeClasses();
@@ -300,31 +176,45 @@ namespace PolymorphicMessagePack
                 {
                     if (TypeToId.ContainsKey(pair2))
                         continue;
-                    TypeToId.TryAdd(pair2, startId);
-                    IdToType.TryAdd(startId, pair2);
-                    startId++;
+                    var unionIdAttribute = pair2.GetCustomAttribute<RequireUnionAttribute>(false);
+                    var pairAttr = pair2.CustomAttributes.First();
+                    if (unionIdAttribute == null)
+                        throw new ArgumentException(message: $"Shouldn't Happened---{pair2.FullName} not set RequireUnionAttribute but has been scaned");
+                    if (IdToType.TryGetValue(unionIdAttribute.UnionUniqueId, out var existMarkType))
+                        throw new ArgumentException(message: $"{pair2.FullName} Set union unique Id {unionIdAttribute.UnionUniqueId},but it already been used for {existMarkType.FullName}");
+
+                    TypeToId.Add(pair2, unionIdAttribute.UnionUniqueId);
+                    IdToType.Add(unionIdAttribute.UnionUniqueId, pair2);
                 }
             }
 
             //get all drive abs/interface generic classes
             var allNeedRecordGenericClasses = markedUnionRequireAbsOrInterfaces.GetAbsDriveGenericClassTypes();
             //record all need prepare generic type class type
-            //can't scan from static code,only can know what actually type used for them
-            //e.g: abstract class A {}   class B<T>:A{}
-            //this can be scan and find define for B<T>->B<>
-            //but can't know what really T will be used which type 
             foreach (var pair in allNeedRecordGenericClasses)
             {
                 BaseTypes.Add(pair.Key);
                 foreach (var pair2 in pair.Value)
                 {
-                    if (GenericTypes.Contains(pair2))
-                        continue;
-                    GenericTypes.Add(pair2);
+                    var unionGenericAttributes = pair2.GetCustomAttributes<RequireUnionGenericAttribute>(false);
+                    //truth require register type
+                    foreach (var factUsedRuntimeGenericVersion in unionGenericAttributes)
+                    {
+                        var fType = factUsedRuntimeGenericVersion.SupportGenericType;
+                        if (fType.IsGenericType && fType.GetGenericTypeDefinition() == pair2)
+                        {
+                            if (TypeToId.ContainsKey(fType))
+                                continue;
+                            if (IdToType.TryGetValue(factUsedRuntimeGenericVersion.UnionUniqueId, out var existMarkType))
+                                throw new ArgumentException(message: $"{fType.FullName} Set union unique Id {factUsedRuntimeGenericVersion.UnionUniqueId},but it already been used for {existMarkType.FullName}");
+                            TypeToId.Add(fType, factUsedRuntimeGenericVersion.UnionUniqueId);
+                            IdToType.Add(factUsedRuntimeGenericVersion.UnionUniqueId, fType);
+                        }
+                        else
+                            throw new ArgumentException(message: $"{fType.FullName} is not genericType or not generic by {pair2.FullName}");
+                    }
                 }
             }
-
-
         }
     }
 }
