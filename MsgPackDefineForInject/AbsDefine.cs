@@ -2,6 +2,7 @@
 
 namespace MsgPackDefineForInject
 {
+    
     [UnionAbsOrInterface]
     public abstract class CBase1
     {

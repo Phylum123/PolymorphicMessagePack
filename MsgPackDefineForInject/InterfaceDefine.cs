@@ -3,34 +3,34 @@
 namespace MsgPackDefineForInject
 {
     [UnionAbsOrInterface]
-    public interface Base1
+    public interface IBase1
     {
 
     }
 
-    public interface Base2
-    {
-
-    }
-
-    [UnionAbsOrInterface]
-    public interface Base3 : Base1
+    public interface IBase2
     {
 
     }
 
     [UnionAbsOrInterface]
-    public interface Base4<T>
+    public interface IBase3 : IBase1
     {
 
     }
 
-    public interface Base5 : Base4<string>
+    [UnionAbsOrInterface]
+    public interface IBase4<T>
+    {
+
+    }
+
+    public interface IBase5 : IBase4<string>
     {
 
     }
     [UnionAbsOrInterface]
-    public interface Base6<T> : Base4<T>
+    public interface IBase6<T> : IBase4<T>
     {
 
     }

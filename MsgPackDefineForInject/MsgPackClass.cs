@@ -43,7 +43,7 @@ namespace MsgPackDefineForInject
     }
 
     [MessagePackObject]
-    public class Class6 : Base3
+    public class Class6 : IBase3
     {
         [Key(0)]
         public long CT6 { get; set; }

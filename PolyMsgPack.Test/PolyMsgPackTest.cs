@@ -69,8 +69,8 @@ namespace PolyMsgPack.Test
         public void Test_S_DS_MultiInterface()
         {
             var s = MessagePackSerializer.Serialize(new Class6(), _options);
-            var ds1 = MessagePackSerializer.Deserialize<Base3>(s, _options);
-            var ds2 = MessagePackSerializer.Deserialize<Base1>(s, _options);
+            var ds1 = MessagePackSerializer.Deserialize<IBase3>(s, _options);
+            var ds2 = MessagePackSerializer.Deserialize<IBase1>(s, _options);
             Assert.IsNotNull(ds1);
             Assert.IsNotNull(ds2);
         }
