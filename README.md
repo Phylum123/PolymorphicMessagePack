@@ -85,7 +85,7 @@ Then set your `Project1` follow these steps:
         public long CT1 { get; set; }
     }
     
-    //also work for generic type,but you mast make sure type in [RequireUnionGeneric] must current generic type or fody will give complie error
+    //also work for generic type,but you must make sure type in [RequireUnionGeneric] is current generic type or fody will give complie error
     [RequireUnionGeneric(10,typeof(Class2<int>))]
     [GenericUnion(typeof(string))]
     [MessagePackObject]
