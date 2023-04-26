@@ -75,6 +75,25 @@ Then set your `Project1` follow these steps:
         [Key(0)]
         public long CT2 { get; set; }
     }
+    
+    //if you want to fixed union id manually,mark it,fody will ignore this type and avoid use fixed id to mark other types
+    [RequireUnion(1)]
+    [MessagePackObject]
+    public class Class3 : CBase1
+    {
+        [Key(0)]
+        public long CT1 { get; set; }
+    }
+    
+    //also work for generic type,but you mast make sure type in [RequireUnionGeneric] must current generic type or fody will give complie error
+    [RequireUnionGeneric(10,typeof(Class2<int>))]
+    [GenericUnion(typeof(string))]
+    [MessagePackObject]
+    public class Class2<T> : IBase4<T>
+    {
+        [Key(0)]
+        public long CT2 { get; set; }
+    }
 ```
   6. using and inject `Project1` assembly into `PolymorphicMessagePackSettings` and use it
   
