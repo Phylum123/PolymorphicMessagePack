@@ -1,5 +1,5 @@
 # AutoPolymorphicMessagePack
-Auto Union Scanner For [MessagePack-CSharp](https://github.com/neuecc/MessagePack-CSharp)
+Auto Union Scanner & Auto Key Generator For [MessagePack-CSharp](https://github.com/neuecc/MessagePack-CSharp)
 
 Let you use more easy way to
     
