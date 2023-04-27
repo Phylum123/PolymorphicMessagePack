@@ -1,4 +1,4 @@
 ﻿<Weavers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FodyWeavers.xsd">
-  <AutoMsgPackKeyWeaver NameSpace='MsgPackDefineForInject'/>
-  <AutoPolyMsgPackWeaver NameSpace='MsgPackDefineForInject'/>
+  <AutoMsgPackKeyWeaver NameSpace='MsgPackDefineForInject' BaseNonMarkTypeFieldMarkAsIgnore='True' AlsoMarkPrivateField='False'/>
+  <AutoPolyMsgPackWeaver NameSpace='MsgPackDefineForInject' />
 </Weavers>
