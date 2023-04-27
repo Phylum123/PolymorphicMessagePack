@@ -285,7 +285,7 @@ namespace PolymorphicMessagePack.Fody
                                 x.CustomAttributes.Any(y => y.AttributeType.FullName == _autoPropFieldAttrDef.FullName)).ToList();
 
             var considerProperties = new List<PropertyDefinition>();
-            //Auto Field ignore :{System.Int64 MsgPackDefineForInject.Struct1::<ST1>k__BackingField}+{System.Runtime.CompilerServices.CompilerGeneratedAttribute}
+            //Auto Field ignore :{<ST1>k__BackingField}+{System.Runtime.CompilerServices.CompilerGeneratedAttribute}
             //Auto Field Match: <prop.Name>k__BackingField 
 
             //only consider auto-prop properties,not auto-prop most will be logic and not able to serialize/deserialize
