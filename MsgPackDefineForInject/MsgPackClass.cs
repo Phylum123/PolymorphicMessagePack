@@ -60,7 +60,7 @@ namespace MsgPackDefineForInject
         [Key(0)]
         public long CT6 { get; set; }
 
-        public long CT6_1 { get; set; }
+        public long CT6_1 { get; set; } = 12306;
         private long CT6_2;
     }
 
@@ -87,7 +87,7 @@ namespace MsgPackDefineForInject
     [MessagePackObject]
     public struct Struct1
     {
-        private long ST1 { get; }
+        private long ST1 { get; set; }
 
         [Key(1)]
         public long ST2 { get; set; }

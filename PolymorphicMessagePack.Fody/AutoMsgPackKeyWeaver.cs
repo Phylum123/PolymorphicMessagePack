@@ -1,6 +1,7 @@
 ﻿using Fody;
 using MessagePack;
 using Mono.Cecil;
+using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
 using System;
 using System.Collections.Generic;
@@ -43,6 +44,9 @@ namespace PolymorphicMessagePack.Fody
         MethodReference _msgIgnoreConstructor;
 
         MethodReference _msgKeyConstructor;
+
+        MethodDefinition _objctor;
+
         internal class ReferenceTreeNode
         {
             internal TypeDefinition node;
@@ -57,6 +61,7 @@ namespace PolymorphicMessagePack.Fody
         public AutoMsgPackKeyWeaver()
         {
             _msgPackAttrAsName = _msgObjAttr.Assembly.GetName().Name;
+            
         }
 
         public override void Execute()
@@ -122,6 +127,7 @@ namespace PolymorphicMessagePack.Fody
                         typeNode.RequireAddKeyFields.Add(field);
                     }
                 }
+
                 foreach (var property in currentTypeRequireMarkCollection.Item2)
                 {
                     var keyAttrs = property.CustomAttributes.Where(x => x.AttributeType.FullName == _msgKeyAttr.FullName ||
@@ -139,6 +145,7 @@ namespace PolymorphicMessagePack.Fody
                     }
                     else
                     {
+                        //bool HasDefaultValueSet = PropHasDefaultValue(typeNode.node, property);
                         //not set attr
                         typeNode.RequireAddKeyProperties.Add(property);
                     }
@@ -180,6 +187,31 @@ namespace PolymorphicMessagePack.Fody
                 //each base type start with key id 0
                 MarkTreeNode(typeNode, 0, markBaseTypeIgnoreMem);
             }
+        }
+        private bool PropHasDefaultValue(TypeDefinition type,PropertyDefinition property)
+        {
+            //must class can property set default value
+            if (!type.IsClass || type.IsValueType ||type.IsInterface) return false;
+
+            var defaultCtor = type.GetConstructors().Where(x => 0 == x.Parameters.Count).FirstOrDefault();
+            if (defaultCtor == null) return false;
+            var autoFieldName = $"<{property.Name}>k__BackingField";
+            var propAutoField = type.Fields.Where(x => x.Name == autoFieldName).FirstOrDefault();
+            if (propAutoField == null) return false;
+
+            var instructions = defaultCtor.Body.Instructions;
+            foreach (var instruction in instructions)
+            {
+                //only check default ctor operators
+                if (instruction.OpCode.Code == OpCodes.Call.Code && instruction.Operand.ToString() == _objctor.FullName)
+                    break;
+
+                if (instruction.OpCode.Code == OpCodes.Stfld.Code && instruction.Operand.ToString() == propAutoField.FullName)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void MarkTreeNode(ReferenceTreeNode root,int startId,bool markBaseTypeIgnoreMem)
@@ -414,6 +446,8 @@ namespace PolymorphicMessagePack.Fody
         void InitBasicRequireRef()
         {
             _objectTypeDef = ModuleDefinition.ImportReference(TypeSystem.ObjectDefinition).Resolve();
+            _objctor = _objectTypeDef.GetConstructors().Where(x => 0 == x.Parameters.Count).First();
+
             _autoPropFieldAttrDef = ModuleDefinition.ImportReference(typeof(CompilerGeneratedAttribute)).Resolve();
 
             _msgDataIgnoreDef= ModuleDefinition.ImportReference(_msgDataIgnoreAttr).Resolve();
