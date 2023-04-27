@@ -128,6 +128,9 @@ If you want to enable auto Key generate ,set `FodyWeavers.xml` with `AutoMsgPack
 </Weavers>
 ```
 
+Auto Key generate will scan target assembly,find all mark [MessagePackObject] type,and get their base type relate tree,then follow config to add unique Key id ([Key(int x)]) as much as possible to every not manual marked fields/Props
+
+
 `NameSpace` : which assembly to scan
 
 `AlsoMarkPrivateField` : if set with `true`,then all private/internal field/prop will be select and try to add key
