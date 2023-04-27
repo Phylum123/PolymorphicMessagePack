@@ -1,7 +1,11 @@
 # AutoPolymorphicMessagePack
 Auto Union Scanner For [MessagePack-CSharp](https://github.com/neuecc/MessagePack-CSharp)
 
-Let you use more easy way to union messagepack object
+Let you use more easy way to
+    
+    1.  union messagepack object
+    
+    2.  auto mark [Key(x)] to public or private
 
 ## How To Use
 Mark which abstract class or interface you want to union for (e.g.these class are in `Project1` project range)
@@ -115,6 +119,43 @@ Then set your `Project1` follow these steps:
 ```
 
 _You can see more in [PolyMsgPack.Test](https://github.com/PatchouliTC/PolymorphicMessagePack/tree/master/PolymorphicMessagePack.Fody),[MsgPackDefineForInject](https://github.com/PatchouliTC/PolymorphicMessagePack/tree/master/MsgPackDefineForInject) and use `ILSpy` to see how it works_
+
+If you want to enable auto Key generate ,set `FodyWeavers.xml` with `AutoMsgPackKeyWeaver`
+
+```xml
+<Weavers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FodyWeavers.xsd">
+  <AutoMsgPackKeyWeaver NameSpace='MsgPackDefineForInject' MarkIgnoreToFieldForNonMsgPackBaseType='True' AlsoMarkPrivateField='False'/>
+</Weavers>
+```
+
+`NameSpace` : which assembly to scan
+
+`AlsoMarkPrivateField` : if set with `true`,then all private/internal field/prop will be select and try to add key
+
+`MarkIgnoreToFieldForNonMsgPackBaseType` :if target type base type is not mark [MessagePackObject],then all of it's public(private/internal if AlsoMarkPrivateField enabled) will be mark [IgnoreMember]
+
+`AutoMsgPackKeyWeaver` will do these step:
+
+    1. only scan mark with [MessagePackObject] or [DataContract] classes
+    
+    2. will ignore all manual mark with [IgnoreMember] or [IgnoreDataMember] or [Key(string name)] or [DataContract] fields/props
+    
+    3. will follow config, add key to target fields/props which not manual mark with [Key(int x)] or [DataContract(Order=int)]
+    
+    4. will check every field/prop,if it has both [Key(int)] and [DataContract[Order=int]],will cause complie error
+    
+    5. will check target class Accessibility,only public class can mark [MessageObject]
+    
+    6. will check type and base type any fields/props key id conflict [e.g. B->A,both use [key(1)],will cause complie error]
+
+also you can enable both
+
+```xml
+<Weavers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FodyWeavers.xsd">
+  <AutoMsgPackKeyWeaver NameSpace='MsgPackDefineForInject' MarkIgnoreToFieldForNonMsgPackBaseType='True' AlsoMarkPrivateField='False'/>
+  <AutoPolyMsgPackWeaver NameSpace='MsgPackDefineForInject' />
+</Weavers>
+```
 
 ## Note
 
