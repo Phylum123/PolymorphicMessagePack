@@ -178,16 +178,33 @@ namespace PolymorphicMessagePack.Fody
             foreach(var typeNode in refTree.Where(x => x.Parent == null))
             {
                 //each base type start with key id 0
-                MarkTreeNode(typeNode, 0);
+                MarkTreeNode(typeNode, 0, markBaseTypeIgnoreMem);
             }
         }
 
-        private void MarkTreeNode(ReferenceTreeNode root,int startId)
+        private void MarkTreeNode(ReferenceTreeNode root,int startId,bool markBaseTypeIgnoreMem)
         {
-            MarkNodeFields(root, ref startId);
+            //if config choose no [MessagePackObject] type set all fields to [ignoreMumber]
+            if (markBaseTypeIgnoreMem && !root.node.CustomAttributes.Any(x=>x.AttributeType.FullName==_msgObjAttr.FullName))
+            {
+                foreach(var field in root.RequireAddKeyFields)
+                {
+                    var attribute = new CustomAttribute(_msgIgnoreConstructor);
+                    field.CustomAttributes.Add(attribute);
+                }
+                foreach (var property in root.RequireAddKeyProperties)
+                {
+                    var attribute = new CustomAttribute(_msgIgnoreConstructor);
+                    property.CustomAttributes.Add(attribute);
+                }
+            }
+            else
+            {
+                MarkNodeFields(root, ref startId);
+            }
             foreach(var deriveType in root.Childs)
             {
-                MarkTreeNode(deriveType, startId);
+                MarkTreeNode(deriveType, startId, markBaseTypeIgnoreMem);
             }
         }
         private void MarkNodeFields(ReferenceTreeNode node,ref int startId)
