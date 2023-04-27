@@ -51,7 +51,7 @@ Then set your `Project1` follow these steps:
   </ItemGroup>
 ```
 
-  3. Change the [solution build order](https://docs.microsoft.com/en-au/visualstudio/ide/how-to-create-and-remove-project-dependencies) so the 'Project1' project is built before the projects consuming it.
+  3. Change the [solution build order](https://docs.microsoft.com/en-au/visualstudio/ide/how-to-create-and-remove-project-dependencies) so the `Project1` project is built after the fody projects consuming it.
   4. Compile `Project1`,Fody will generate `FodyWeavers.xml` into project when not found that file
   
   then write config into `FodyWeavers.xml`:
