@@ -4,6 +4,7 @@ using PolymorphicMessagePack;
 
 namespace PolyMsgPack.Test
 {
+
     [TestClass]
     public class PolyMsgPackTest
     {

@@ -1,5 +1,6 @@
 ﻿using MessagePack;
 using ShareAttributes;
+using System.Runtime.Serialization;
 
 namespace MsgPackDefineForInject
 {
@@ -16,6 +17,17 @@ namespace MsgPackDefineForInject
     {
 
         public long CT2 { get; set; }
+    }
+
+    [MessagePackObject]
+    public class Class2_1 : Class2
+    {
+        public long CT2_1 { get; set; }
+    }
+    [MessagePackObject]
+    public class Class2_2 : Class2
+    {
+        public long CT2_2 { get; set; } 
     }
 
     [RequireUnion(114514)]
@@ -67,5 +79,29 @@ namespace MsgPackDefineForInject
     public class Class8<T> : CBase6<T>
     {
         public long CT8 { get; set; }
+    }
+
+    [MessagePackObject]
+    public struct Struct1
+    {
+        private long ST1 { get; }
+
+        [Key(1)]
+        public long ST2 { get; set; }
+
+        [Key(2)]
+        public long ST3;
+
+        [DataMember(Order =3)]
+        private long ST4;
+
+        internal long ST5;
+
+        public long STT5
+        {
+            get => ST5;
+            set => ST5 = value;
+        }
+
     }
 }

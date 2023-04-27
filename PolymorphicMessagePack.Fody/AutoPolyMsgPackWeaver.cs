@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace PolymorphicMessagePack.Fody
 {
-    public class MsgPackPolyWeaver : BaseModuleWeaver
+    public class AutoPolyMsgPackWeaver : BaseModuleWeaver
     {
         public override bool ShouldCleanReference => true;
 
@@ -19,7 +19,6 @@ namespace PolymorphicMessagePack.Fody
         Type _reqGenericUnionAttr = typeof(RequireUnionGenericAttribute);
 
         Type _msgObj = typeof(MessagePackObjectAttribute);
-        Type _msgKey = typeof(KeyAttribute);
 
         string _polyAttrAsName;
         string _msgPackAttrAsName;
@@ -32,9 +31,8 @@ namespace PolymorphicMessagePack.Fody
         TypeDefinition _requireUnionGenericAttrRef;
         MethodReference _requireUnionGenericAttrConstructor;
 
-        TypeDefinition _keyMarkRef;
 
-        public MsgPackPolyWeaver()
+        public AutoPolyMsgPackWeaver()
         {
             _polyAttrAsName = _absAttr.Assembly.GetName().Name;
             _msgPackAttrAsName=_msgObj.Assembly.GetName().Name;
@@ -342,7 +340,6 @@ namespace PolymorphicMessagePack.Fody
             yield return "mscorlib";
             yield return "System";
             yield return "System.Runtime";
-            yield return "System.Core";
         }
 
         void InitBasicRequireRef()
@@ -358,22 +355,19 @@ namespace PolymorphicMessagePack.Fody
                 _requireUnionGenericAttrRef = ModuleDefinition.AssemblyResolver.Resolve(polyAttrAssembly).
                     MainModule.Types.
                     Single(type => type.Name == _reqGenericUnionAttr.Name);
-                _keyMarkRef = ModuleDefinition.AssemblyResolver.Resolve(msgPackAssembly).
-                    MainModule.Types.
-                    Single(type => type.Name == _msgKey.Name);
 
                 var requireUnionAttrConstructor= _requireUnionAttrRef
                                                 .GetConstructors()
                                                 .Single(ctor => 
                                                     1 == ctor.Parameters.Count &&
-                                                    "System.UInt32" == ctor.Parameters[0].ParameterType.FullName);
+                                                    TypeSystem.UInt32Reference.FullName == ctor.Parameters[0].ParameterType.FullName);
                 _requireUnionAttrConstructor = ModuleDefinition.ImportReference(requireUnionAttrConstructor);
 
                 var requireUnionGenericAttrConstructor=_requireUnionGenericAttrRef
                                                 .GetConstructors()
                                                 .Single(ctor => 
                                                     2 == ctor.Parameters.Count &&
-                                                    "System.UInt32" == ctor.Parameters[0].ParameterType.FullName &&
+                                                    TypeSystem.UInt32Reference.FullName == ctor.Parameters[0].ParameterType.FullName &&
                                                     "System.Type" == ctor.Parameters[1].ParameterType.FullName);
                 _requireUnionGenericAttrConstructor=ModuleDefinition.ImportReference(requireUnionGenericAttrConstructor);
 

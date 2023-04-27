@@ -12,14 +12,14 @@ using System.Xml.Linq;
 
 namespace Fody.Test
 {
-    public class WeaverTests
+    public class AutoPolyWeaverTests
     {
         static TestResult testResult;
 
-        static WeaverTests()
+        static AutoPolyWeaverTests()
         {
-            var xElement = XElement.Parse("<MsgPackPolyWeaver NameSpace='MsgPackDefineForInject'/>");
-            var weavingTask = new MsgPackPolyWeaver { Config= xElement };
+            var xElement = XElement.Parse("<AutoPolyMsgPackWeaver NameSpace='MsgPackDefineForInject'/>");
+            var weavingTask = new AutoPolyMsgPackWeaver { Config= xElement };
             testResult = weavingTask.ExecuteTestRun("MsgPackDefineForInject.dll",runPeVerify:false);
         }
 

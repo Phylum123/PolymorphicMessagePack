@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <DisableFody>false</DisableFody>
+    <DisableFody>true</DisableFody>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <WeaverFiles Include="$(SolutionDir)PolymorphicMessagePack.Fody\bin\$(Configuration)\netstandard2.0\PolymorphicMessagePack.Fody.dll" WeaverClassNames="MsgPackPolyWeaver" />
+    <WeaverFiles Include="$(SolutionDir)PolymorphicMessagePack.Fody\bin\$(Configuration)\netstandard2.0\PolymorphicMessagePack.Fody.dll" WeaverClassNames="AutoPolyMsgPackWeaver;AutoMsgPackKeyWeaver" />
   </ItemGroup>
   
 </Project>
