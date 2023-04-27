@@ -12,7 +12,7 @@
       <xs:documentation>Also scan and mark private field</xs:documentation>
     </xs:annotation>
   </xs:attribute>
-  <xs:attribute name="BaseNonMarkTypeFieldMarkAsIgnore"
+  <xs:attribute name="MarkIgnoreToFieldForNonMsgPackBaseType"
              type="xs:bool">
     <xs:annotation>
       <xs:documentation>

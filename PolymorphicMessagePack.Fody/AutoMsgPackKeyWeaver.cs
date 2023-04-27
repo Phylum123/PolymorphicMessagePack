@@ -68,7 +68,7 @@ namespace PolymorphicMessagePack.Fody
                 return;
             }
             var markPrivateField = GetBoolFromConfig("AlsoMarkPrivateField");
-            var markBaseTypeIgnoreMem = GetBoolFromConfig("BaseNonMarkTypeFieldMarkAsIgnore");
+            var markBaseTypeIgnoreMem = GetBoolFromConfig("MarkIgnoreToFieldForNonMsgPackBaseType");
 
             InitBasicRequireRef();
 

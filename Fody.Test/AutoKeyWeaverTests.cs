@@ -20,7 +20,7 @@ namespace Fody.Test
 
         static AutoKeyWeaverTests()
         {
-            var xElement = XElement.Parse("<AutoMsgPackKeyWeaver NameSpace='MsgPackDefineForInject' BaseNonMarkTypeFieldMarkAsIgnore='True'/>");
+            var xElement = XElement.Parse("<AutoMsgPackKeyWeaver NameSpace='MsgPackDefineForInject' MarkIgnoreToFieldForNonMsgPackBaseType='True'/>");
             var weavingTask = new AutoMsgPackKeyWeaver { Config = xElement };
             testResult = weavingTask.ExecuteTestRun("MsgPackDefineForInject.dll", runPeVerify: false);
         }
