@@ -34,6 +34,8 @@ Mark which abstract class or interface you want to union for (e.g.these class ar
 AutoPolymorphicMessagePack use Fody Plugin to weave in automatically at compile time,I haven't publish nuget package yet,
 so you need add [PolymorphicMessagePack.Fody](https://github.com/PatchouliTC/PolymorphicMessagePack/tree/master/PolymorphicMessagePack.Fody) into your project
 
+_For more details you can see [in-solution-weaving](https://github.com/Fody/Home/blob/master/pages/in-solution-weaving.md)_
+
 Then set your `Project1` follow these steps:
 
   1. import [Fody Nuget Package](https://www.nuget.org/packages/Fody) into `Project1` 
