@@ -10,7 +10,7 @@ namespace MsgPackDefineForInject
 
     public abstract class CBase2
     {
-
+        public long CTB2 { get; set; }
     }
 
     [UnionAbsOrInterface]

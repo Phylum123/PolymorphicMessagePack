@@ -264,7 +264,8 @@ namespace PolymorphicMessagePack.Fody
             if (markPrivateField)
                 considerFields = query.ToList();
             else
-                considerFields = query.Where(x => !(x.IsAssembly || x.IsPrivate) || x.CustomAttributes.Any(y => y.AttributeType.FullName == _autoPropFieldAttrDef.FullName)).ToList();
+                considerFields = query.Where(x => !(x.IsAssembly || x.IsPrivate) ||
+                                x.CustomAttributes.Any(y => y.AttributeType.FullName == _autoPropFieldAttrDef.FullName)).ToList();
 
             var considerProperties = new List<PropertyDefinition>();
             //Auto Field ignore :{System.Int64 MsgPackDefineForInject.Struct1::<ST1>k__BackingField}+{System.Runtime.CompilerServices.CompilerGeneratedAttribute}

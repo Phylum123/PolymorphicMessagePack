@@ -59,6 +59,9 @@ namespace MsgPackDefineForInject
     {
         [Key(0)]
         public long CT6 { get; set; }
+
+        public long CT6_1 { get; set; }
+        private long CT6_2;
     }
 
 
@@ -89,10 +92,8 @@ namespace MsgPackDefineForInject
         [Key(1)]
         public long ST2 { get; set; }
 
-        [Key(2)]
         public long ST3;
 
-        [DataMember(Order =3)]
         private long ST4;
 
         internal long ST5;
