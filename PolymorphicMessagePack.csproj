@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="AbsInjectTypeDll\**" />
     <Compile Remove="Fody.Test\**" />
     <Compile Remove="MsgPackDefineForInject\**" />
     <Compile Remove="PolymorphicMessagePack.Fody\**" />
@@ -12,6 +13,7 @@
     <Compile Remove="PolyMsgPack.Test\**" />
     <Compile Remove="ShareAttributes\**" />
     <Compile Remove="SharedAttributes\**" />
+    <EmbeddedResource Remove="AbsInjectTypeDll\**" />
     <EmbeddedResource Remove="Fody.Test\**" />
     <EmbeddedResource Remove="MsgPackDefineForInject\**" />
     <EmbeddedResource Remove="PolymorphicMessagePack.Fody\**" />
@@ -19,6 +21,7 @@
     <EmbeddedResource Remove="PolyMsgPack.Test\**" />
     <EmbeddedResource Remove="ShareAttributes\**" />
     <EmbeddedResource Remove="SharedAttributes\**" />
+    <None Remove="AbsInjectTypeDll\**" />
     <None Remove="Fody.Test\**" />
     <None Remove="MsgPackDefineForInject\**" />
     <None Remove="PolymorphicMessagePack.Fody\**" />

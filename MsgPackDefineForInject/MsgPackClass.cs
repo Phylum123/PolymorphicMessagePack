@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 
 namespace MsgPackDefineForInject
 {
-
+    [MessagePackObject]
     public class Class1 : CBase1
     {
 

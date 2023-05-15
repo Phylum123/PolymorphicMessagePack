@@ -18,24 +18,24 @@ namespace PolymorphicMessagePack
             return (assembly, markdata);
         }
 
-        public static Dictionary<Type, List<Type>> GetAbsDriveClassTypes(this (Assembly assembly, HashSet<Type> types) data)
+        public static Dictionary<Type, List<Type>> GetAbsDriveClassTypes(this HashSet<Type> types,Assembly target)
         {
-            var require_search_types = data.assembly.GetTypes().Where(x =>
+            var require_search_types = target.GetTypes().Where(x =>
                 //is abstract,is interface,not class,is object,in marked types,is generic are ignore
-                !x.IsAbstract && !x.IsInterface && x.IsClass && x != _objType && !data.types.Contains(x) && !x.IsGenericType
+                !x.IsAbstract && !x.IsInterface && x.IsClass && x != _objType && !types.Contains(x) && !x.IsGenericType
             );
 
-            return AnalysisTypes(require_search_types, data.types);
+            return AnalysisTypes(require_search_types, types);
         }
 
-        public static Dictionary<Type, List<Type>> GetAbsDriveGenericClassTypes(this (Assembly assembly, HashSet<Type> types) data)
+        public static Dictionary<Type, List<Type>> GetAbsDriveGenericClassTypes(this HashSet<Type> types, Assembly target)
         {
-            var require_search_types = data.assembly.GetTypes().Where(x =>
+            var require_search_types = target.GetTypes().Where(x =>
                 //is abstract,is interface,not class,is object,in marked types,not generic are ignore
-                !x.IsAbstract && !x.IsInterface && x.IsClass && x != _objType && !data.types.Contains(x) && x.IsGenericType
+                !x.IsAbstract && !x.IsInterface && x.IsClass && x != _objType && !types.Contains(x) && x.IsGenericType
             );
 
-            return AnalysisTypes(require_search_types, data.types);
+            return AnalysisTypes(require_search_types, types);
         }
 
         private static Dictionary<Type, List<Type>> AnalysisTypes(IEnumerable<Type> types, HashSet<Type> exceptTypes)
@@ -156,17 +156,17 @@ namespace PolymorphicMessagePack
             BaseTypes.Add(typeof(B));
         }
 
-        public void InjectUnionRequireFromAssembly(Assembly assembly)
+        public void InjectUnionRequireFromAssembly(Assembly assembly,Assembly absClassAssembly)
         {
-            if (Assemblies.Contains(assembly))
+            if (Assemblies.Contains(assembly) && Assemblies.Contains(absClassAssembly))
                 return;
             Assemblies.Add(assembly);
-
+            Assemblies.Add(absClassAssembly);
             //get all mark require union abs/interface
-            var markedUnionRequireAbsOrInterfaces = assembly.GetMarkUnionAbsAttributeClasses();
+            var markedUnionRequireAbsOrInterfaces = absClassAssembly.GetMarkUnionAbsAttributeClasses();
 
             //get all drive abs/interface non generic classes
-            var allNeedMapNonGenericClasses = markedUnionRequireAbsOrInterfaces.GetAbsDriveClassTypes();
+            var allNeedMapNonGenericClasses = markedUnionRequireAbsOrInterfaces.Item2.GetAbsDriveClassTypes(assembly);
 
             //register them,record relate abs and interface
             foreach (var pair in allNeedMapNonGenericClasses)
@@ -189,7 +189,7 @@ namespace PolymorphicMessagePack
             }
 
             //get all drive abs/interface generic classes
-            var allNeedRecordGenericClasses = markedUnionRequireAbsOrInterfaces.GetAbsDriveGenericClassTypes();
+            var allNeedRecordGenericClasses = markedUnionRequireAbsOrInterfaces.Item2.GetAbsDriveGenericClassTypes(assembly);
             //record all need prepare generic type class type
             foreach (var pair in allNeedRecordGenericClasses)
             {
