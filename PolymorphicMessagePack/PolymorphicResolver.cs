@@ -11,7 +11,7 @@ namespace PolymorphicMessagePack
     {
 
         private readonly PolymorphicMessagePackSettings _polymorphicSettings;
-        private readonly ConcurrentDictionary<Type, IMessagePackDeserializeToObject> _innerDeserializeFormatterCache = new();
+        private readonly ConcurrentDictionary<Type, IMessagePackDeserializeToObject> _innerDeserializeFormatterCache = new ConcurrentDictionary<Type, IMessagePackDeserializeToObject>();
         public PolymorphicResolver(PolymorphicMessagePackSettings polymorphicSettings)
         {
             _polymorphicSettings = polymorphicSettings;

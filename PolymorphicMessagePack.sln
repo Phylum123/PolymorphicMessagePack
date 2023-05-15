@@ -18,7 +18,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PolymorphicMessagePack.Fody
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fody.Test", "Fody.Test\Fody.Test.csproj", "{863134AE-368E-46E9-8D60-72AC9EDBA107}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbsInjectTypeDll", "AbsInjectTypeDll\AbsInjectTypeDll.csproj", "{FFC7FCC9-C9A6-4896-8807-670D52C725AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AbsInjectTypeDll", "AbsInjectTypeDll\AbsInjectTypeDll.csproj", "{FFC7FCC9-C9A6-4896-8807-670D52C725AD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PolyServer", "PolyServer\PolyServer.csproj", "{1F2010FA-8685-4FB4-85FA-48A29D9EF74B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.Shared", "Service.Shared\Service.Shared.csproj", "{EF0D7F0D-4BB8-41D7-95BC-E3066FEF6341}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PolyClient", "PolyClient\PolyClient.csproj", "{43F43EB2-326E-40F5-9678-EC1402949286}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,6 +60,18 @@ Global
 		{FFC7FCC9-C9A6-4896-8807-670D52C725AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFC7FCC9-C9A6-4896-8807-670D52C725AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFC7FCC9-C9A6-4896-8807-670D52C725AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F2010FA-8685-4FB4-85FA-48A29D9EF74B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F2010FA-8685-4FB4-85FA-48A29D9EF74B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F2010FA-8685-4FB4-85FA-48A29D9EF74B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F2010FA-8685-4FB4-85FA-48A29D9EF74B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF0D7F0D-4BB8-41D7-95BC-E3066FEF6341}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF0D7F0D-4BB8-41D7-95BC-E3066FEF6341}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF0D7F0D-4BB8-41D7-95BC-E3066FEF6341}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF0D7F0D-4BB8-41D7-95BC-E3066FEF6341}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43F43EB2-326E-40F5-9678-EC1402949286}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43F43EB2-326E-40F5-9678-EC1402949286}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43F43EB2-326E-40F5-9678-EC1402949286}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43F43EB2-326E-40F5-9678-EC1402949286}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

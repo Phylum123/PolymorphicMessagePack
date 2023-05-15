@@ -25,7 +25,7 @@ namespace PolyMsgPack.Test
         [TestMethod]
         public void Test_NonGenericToAbs()
         {
-            var s = MessagePackSerializer.Serialize(new Class3 { CT1 = 3 });
+            var s = MessagePackSerializer.Serialize(new Class3 { CT1 = 3,CT3=4});
             var ds = MessagePackSerializer.Deserialize<CBase1>(s);
 
             Assert.IsTrue(ds is Class1 ds1 && ds1.CT1 == 3);

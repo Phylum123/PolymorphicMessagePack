@@ -27,6 +27,5 @@ namespace PolymorphicMessagePack
         {
             return new PolymorphicMessagePackSerializerOptions(this);
         }
-
     }
 }
