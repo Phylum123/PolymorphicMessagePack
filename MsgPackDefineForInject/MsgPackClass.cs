@@ -1,4 +1,4 @@
-﻿using AbsInjectTypeDll;
+﻿using AbsInjectTypeDll.DllSubAssembly;
 using MessagePack;
 using ShareAttributes;
 using System.Runtime.Serialization;

@@ -1,7 +1,7 @@
 ﻿using ShareAttributes;
 using System;
 
-namespace AbsInjectTypeDll
+namespace AbsInjectTypeDll.DllSubAssembly
 {
 
     [UnionAbsOrInterface]

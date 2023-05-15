@@ -6,6 +6,7 @@ using ShareAttributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace PolymorphicMessagePack.Fody
 {
@@ -57,7 +58,7 @@ namespace PolymorphicMessagePack.Fody
                 //find abs from target namespace
                 requireConsiderAbsAndInterfaceTypes = ModuleDefinition.Types.Where(
                     x => x.HasCustomAttributes &&
-                    x.Namespace == ns &&
+                    x.Module.Assembly.Name.Name == ns &&
                     x.CustomAttributes.Any(y => y.AttributeType.FullName == _absAttr.FullName));
             }
             else
@@ -68,10 +69,11 @@ namespace PolymorphicMessagePack.Fody
                     WriteError($"Not Find abstract type assembly {absns} in {ns} reference assemblies");
                     return;
                 }
-                requireConsiderAbsAndInterfaceTypes= ModuleDefinition.AssemblyResolver.Resolve(absLocationAssembly).
-                    MainModule.Types.Where(
+                var resolveTypes = ModuleDefinition.AssemblyResolver.Resolve(absLocationAssembly).
+                    MainModule.Types;
+                requireConsiderAbsAndInterfaceTypes = resolveTypes.Where(
                     x => x.HasCustomAttributes &&
-                    x.Namespace == absns &&
+                    x.Module.Assembly.Name.Name == absns &&
                     x.CustomAttributes.Any(y => y.AttributeType.FullName == _absAttr.FullName));
             }
 
@@ -412,8 +414,6 @@ namespace PolymorphicMessagePack.Fody
             var value = attribute.Value;
             return value;
         }
-
-
         #endregion
     }
 }
