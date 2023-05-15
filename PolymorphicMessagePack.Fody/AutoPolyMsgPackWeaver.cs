@@ -41,6 +41,8 @@ namespace PolymorphicMessagePack.Fody
         public override void Execute()
         {
             var ns = GetValueFromConfig("NameSpace");
+            var absns = GetValueFromConfig("AbsNameSpace");
+
             if(ns == null)
             {
                 WriteError("Scan Assembly name not set in config");
@@ -48,10 +50,30 @@ namespace PolymorphicMessagePack.Fody
             }
             InitBasicRequireRef();
 
-            var requireConsiderAbsAndInterfaceTypes = ModuleDefinition.Types.Where(
-                x => x.HasCustomAttributes &&
-                x.Namespace == ns &&
-                x.CustomAttributes.Any(y => y.AttributeType.FullName == _absAttr.FullName));
+            IEnumerable<TypeDefinition> requireConsiderAbsAndInterfaceTypes;
+
+            if (absns == null)
+            {
+                //find abs from target namespace
+                requireConsiderAbsAndInterfaceTypes = ModuleDefinition.Types.Where(
+                    x => x.HasCustomAttributes &&
+                    x.Namespace == ns &&
+                    x.CustomAttributes.Any(y => y.AttributeType.FullName == _absAttr.FullName));
+            }
+            else
+            {
+                var absLocationAssembly = ModuleDefinition.AssemblyReferences.Where(x => x.Name == absns).FirstOrDefault();
+                if (absLocationAssembly == null)
+                {
+                    WriteError($"Not Find abstract type assembly {absns} in {ns} reference assemblies");
+                    return;
+                }
+                requireConsiderAbsAndInterfaceTypes= ModuleDefinition.AssemblyResolver.Resolve(absLocationAssembly).
+                    MainModule.Types.Where(
+                    x => x.HasCustomAttributes &&
+                    x.Namespace == absns &&
+                    x.CustomAttributes.Any(y => y.AttributeType.FullName == _absAttr.FullName));
+            }
 
             var resultsForNonGenericTypes = GetNonGenericDerivedTypes(ModuleDefinition, requireConsiderAbsAndInterfaceTypes).OrderBy(x => x.FullName);
             

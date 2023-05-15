@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <DisableFody>true</DisableFody>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <DisableFody>false</DisableFody>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AbsInjectTypeDll\AbsInjectTypeDll.csproj" />
     <ProjectReference Include="..\ShareAttributes\ShareAttributes.csproj" />
   </ItemGroup>
 

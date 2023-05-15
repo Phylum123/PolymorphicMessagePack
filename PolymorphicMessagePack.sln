@@ -18,6 +18,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PolymorphicMessagePack.Fody
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fody.Test", "Fody.Test\Fody.Test.csproj", "{863134AE-368E-46E9-8D60-72AC9EDBA107}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbsInjectTypeDll", "AbsInjectTypeDll\AbsInjectTypeDll.csproj", "{FFC7FCC9-C9A6-4896-8807-670D52C725AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +50,10 @@ Global
 		{863134AE-368E-46E9-8D60-72AC9EDBA107}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{863134AE-368E-46E9-8D60-72AC9EDBA107}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{863134AE-368E-46E9-8D60-72AC9EDBA107}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFC7FCC9-C9A6-4896-8807-670D52C725AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFC7FCC9-C9A6-4896-8807-670D52C725AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFC7FCC9-C9A6-4896-8807-670D52C725AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFC7FCC9-C9A6-4896-8807-670D52C725AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

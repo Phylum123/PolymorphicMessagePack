@@ -1,4 +1,5 @@
-﻿using MessagePack;
+﻿using AbsInjectTypeDll;
+using MessagePack;
 using ShareAttributes;
 using System.Runtime.Serialization;
 

@@ -18,7 +18,7 @@ namespace Fody.Test
 
         static AutoPolyWeaverTests()
         {
-            var xElement = XElement.Parse("<AutoPolyMsgPackWeaver NameSpace='MsgPackDefineForInject'/>");
+            var xElement = XElement.Parse("<AutoPolyMsgPackWeaver NameSpace='MsgPackDefineForInject' AbsNameSpace='AbsInjectTypeDll'/>");
             var weavingTask = new AutoPolyMsgPackWeaver { Config= xElement };
             testResult = weavingTask.ExecuteTestRun("MsgPackDefineForInject.dll",runPeVerify:false);
         }

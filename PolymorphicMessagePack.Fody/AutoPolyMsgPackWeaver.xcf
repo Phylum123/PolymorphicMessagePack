@@ -6,4 +6,10 @@
       <xs:documentation>Namespace to use for the injected type</xs:documentation>
     </xs:annotation>
   </xs:attribute>
+  <xs:attribute name="AbsNameSpace"
+               type="xs:string">
+    <xs:annotation>
+      <xs:documentation>Abstruct Type in space</xs:documentation>
+    </xs:annotation>
+  </xs:attribute>
 </xs:complexType>
