@@ -34,6 +34,8 @@ Mark which abstract class or interface you want to union for (e.g.these class ar
 AutoPolymorphicMessagePack use Fody Plugin to weave in automatically at compile time,I haven't publish nuget package yet,
 so you need add [PolymorphicMessagePack.Fody](https://github.com/PatchouliTC/PolymorphicMessagePack/tree/master/PolymorphicMessagePack.Fody) into your project
 
+_For more details you can see [in-solution-weaving](https://github.com/Fody/Home/blob/master/pages/in-solution-weaving.md)_
+
 Then set your `Project1` follow these steps:
 
   1. import [Fody Nuget Package](https://www.nuget.org/packages/Fody) into `Project1` 
@@ -49,7 +51,7 @@ Then set your `Project1` follow these steps:
   </ItemGroup>
 ```
 
-  3. Change the [solution build order](https://docs.microsoft.com/en-au/visualstudio/ide/how-to-create-and-remove-project-dependencies) so the 'Project1' project is built before the projects consuming it.
+  3. Change the [solution build order](https://docs.microsoft.com/en-au/visualstudio/ide/how-to-create-and-remove-project-dependencies) so the `Project1` project is built after the fody projects consuming it.
   4. Compile `Project1`,Fody will generate `FodyWeavers.xml` into project when not found that file
   
   then write config into `FodyWeavers.xml`:
@@ -127,6 +129,9 @@ If you want to enable auto Key generate ,set `FodyWeavers.xml` with `AutoMsgPack
   <AutoMsgPackKeyWeaver NameSpace='MsgPackDefineForInject' MarkIgnoreToFieldForNonMsgPackBaseType='True' AlsoMarkPrivateField='False'/>
 </Weavers>
 ```
+
+Auto Key generate will scan target assembly,find all mark [MessagePackObject] type,and get their base type relate tree,then follow config to add unique Key id ([Key(int x)]) as much as possible to every not manual marked fields/Props
+
 
 `NameSpace` : which assembly to scan
 
