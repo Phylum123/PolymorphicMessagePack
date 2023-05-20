@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <DisableFody>false</DisableFody>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>5</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <WarningLevel>5</WarningLevel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Fody" Version="6.7.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="MessagePack" Version="2.5.108" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AbsInjectTypeDll\AbsInjectTypeDll.csproj" />
+    <ProjectReference Include="..\ShareAttributes\ShareAttributes.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <WeaverFiles Include="$(SolutionDir)PolymorphicMessagePack.Fody\bin\$(Configuration)\netstandard2.0\PolymorphicMessagePack.Fody.dll" WeaverClassNames="AutoPolyMsgPackWeaver;AutoMsgPackKeyWeaver" />
+  </ItemGroup>
+  
+</Project>
